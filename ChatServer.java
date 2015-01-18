@@ -16,16 +16,16 @@ public class ChatServer{
 		}
 		
 		port = Integer.parseInt(args[0]);
-		
+
 		try{
 			svrSocket = new ServerSocket(port);
 			Socket userSocket;
+			System.out.println("Server started, waiting for client connections...");
 			while(waiting){
 				userSocket = svrSocket.accept();
-				userSocket.setSoTimeout(timeout);
+				userSocket.setSoTimeout(timeout * 1000);
 				System.out.println("Client accepted " + userSocket);
 				new ChatThread(userSocket).start();
-				
 			}
 		}
 		catch (IOException ioe){
@@ -39,7 +39,4 @@ public class ChatServer{
 	}
 	
 }
-
-//doesn't compile with javac on cs computers...
-///ChatServer.java:27: undefined reference to `ChatThread::ChatThread(java::net::Socket*)'
 

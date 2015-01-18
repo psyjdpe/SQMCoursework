@@ -1,10 +1,10 @@
 import java.net.*;
-//import java.util.ArrayList;
 import java.io.*;
 
 public class ChatThread extends Thread {
 	private Socket socket = null;
-	//private static ArrayList <String> users;
+	//private String nameInput = null;
+
 	
 	public ChatThread(Socket svrSocket){
 		super("ChatThread");
@@ -13,31 +13,26 @@ public class ChatThread extends Thread {
 	
 	public void run(){
 		
-		try {
+		try (
 			PrintWriter serverOutput = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader clientInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader clientInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));){
 			
 			CommandHandler ch = new CommandHandler();
 			String output;
 			String input;
-			output = ch.handleInput(null);
-			serverOutput.println(output);
-			
+			//String name;
+			serverOutput.println("Please enter a username");
 			while((input = clientInput.readLine()) != null){
-				serverOutput.println("Please enter a username");
-				String nameInput = clientInput.readLine();
-				if(nameInput == null){
-					return;
-				}
-				/*try{
-					synchronized(users){
-						users.add(nameInput);
-					}
-				}
-				catch(Exception e){
-					System.out.println(e);
-				}*/
-				input = clientInput.readLine();
+				/*while(nameInput == null){
+
+					nameInput = clientInput.readLine();
+					if(nameInput == null){
+						return;
+					} else {
+						name = nameInput;
+						serverOutput.println("Welcome " + name);
+					}*/
+				
 				output = ch.handleInput(input);
 				serverOutput.println(output);
 				if(output.contains("+OK client signing out")){
@@ -45,7 +40,9 @@ public class ChatThread extends Thread {
 				}
 			}
 			socket.close();	
-		}
+			System.out.println("User has logged out");
+			}
+		
 		catch(SocketTimeoutException t){
 			System.out.println("Connection has timed out");
 		}

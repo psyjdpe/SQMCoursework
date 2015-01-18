@@ -1,3 +1,5 @@
+import java.net.*;
+import java.io.*;
 
 public class CommandHandler {
 
@@ -6,7 +8,7 @@ public class CommandHandler {
 		
 		String[] split = (input.split(" "));
 		String cmd = split[0].toUpperCase();
-		/*String arg1 = null;
+		String arg1 = null;
 		String arg2 = null;
 		
         if (split.length > 1) { 	
@@ -15,9 +17,9 @@ public class CommandHandler {
         
         if(split.length > 2) {	
         	arg1 = split[2];
-        }*/
+        }
 		
-        
+        /*
         if(cmd == "STAT"){
         	return statMethod();
         }
@@ -35,9 +37,9 @@ public class CommandHandler {
         }
         else if(cmd == "QUIT"){
         	return quitMethod();
-        } else{
+        } else{*/
         
-        /*switch(cmd){
+        switch(cmd){
         case "STAT":
         	return statMethod();
         case "IDEN":
@@ -50,11 +52,12 @@ public class CommandHandler {
         	return hailMethod();
         case "QUIT":
         	return quitMethod();
-        }*/
+        }
         
         	return "Error, invalid input";
-        }
-	}
+    }
+	//}
+	
 	
 	public String statMethod(){
 		return "stat";
@@ -65,7 +68,7 @@ public class CommandHandler {
 	}
 	
 	public String listMethod(){
-		return "list";
+		return "list in handler";
 	}
 	
 	public String mesgMethod(){
