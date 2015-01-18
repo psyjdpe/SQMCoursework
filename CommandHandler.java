@@ -1,12 +1,15 @@
+import java.net.*;
+import java.io.*;
 
 public class CommandHandler {
 
+	ClientHandler chan = new ClientHandler();
 	
 	String handleInput(String input){
 		
 		String[] split = (input.split(" "));
 		String cmd = split[0].toUpperCase();
-		/*String arg1 = null;
+		String arg1 = null;
 		String arg2 = null;
 		
         if (split.length > 1) { 	
@@ -15,29 +18,9 @@ public class CommandHandler {
         
         if(split.length > 2) {	
         	arg1 = split[2];
-        }*/
-		
-        
-        if(cmd == "STAT"){
-        	return statMethod();
         }
-        else if(cmd == "IDEN"){
-        	return idenMethod();
-        }
-        else if(cmd == "LIST"){
-        	return listMethod();
-        }
-        else if(cmd == "MESG"){
-        	return mesgMethod();
-        }
-        else if(cmd == "HAIL"){
-        	return hailMethod();
-        }
-        else if(cmd == "QUIT"){
-        	return quitMethod();
-        } else{
-        
-        /*switch(cmd){
+		        
+        switch(cmd){
         case "STAT":
         	return statMethod();
         case "IDEN":
@@ -50,14 +33,16 @@ public class CommandHandler {
         	return hailMethod();
         case "QUIT":
         	return quitMethod();
-        }*/
+        }
         
         	return "Error, invalid input";
-        }
-	}
+    }
+	//}
+	
 	
 	public String statMethod(){
-		return "stat";
+		int num = chan.numClients();
+		return "Numer of users online: " + num;
 	}
 	
 	public String idenMethod(){
@@ -65,7 +50,7 @@ public class CommandHandler {
 	}
 	
 	public String listMethod(){
-		return "list";
+		return "list in handler";
 	}
 	
 	public String mesgMethod(){
