@@ -1,45 +1,71 @@
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class ChatServer{
+	
+	private static int timeout = 10000;
+	private static int port;
+	ServerSocket svrSocket;
+	
+	protected static Hashtable<String, Socket> online = new Hashtable<String, Socket>();
+	
+	public ChatServer(int port) throws IOException{
+		waiting(port);
+	}
+	
+	
 	public static void main(String[] args) throws IOException {
 	
-		int timeout = 10000;
-		int port;
-		boolean waiting = true;
-		ServerSocket svrSocket = null;
-		
-		
+		port = Integer.parseInt(args[0]);
 		if(args.length < 1){
 			System.err.println("No port number specified, please try again");
 			System.exit(1);
 		}
-		
-		port = Integer.parseInt(args[0]);
-		
+		System.out.println("Server started on port: " + port + " waiting for clients...");
+		new ChatServer(port);
+	}
+	
+	
+	private void waiting(int port) throws IOException{
+		boolean waiting = true;
 		try{
 			svrSocket = new ServerSocket(port);
-			Socket userSocket;
-			while(waiting){
-				userSocket = svrSocket.accept();
-				userSocket.setSoTimeout(timeout);
-				System.out.println("Client accepted " + userSocket);
-				new ChatThread(userSocket).start();
-				
-			}
-		}
-		catch (IOException ioe){
+		}catch (IOException ioe){
 			ioe.printStackTrace();
 			System.exit(-1);
 		}
-		finally{
-			svrSocket.close();
+		while(waiting){
+			Socket userSocket = svrSocket.accept();
+			userSocket.setSoTimeout(timeout * 1000);
+			System.out.println("Client accepted " + userSocket);
+			new ChatThread(this, userSocket);
 		}
-		
 	}
 	
-}
+	protected void AddUser(String username, Socket socket){
+		synchronized(online){
+			online.put(username, socket);
+		}
+	}
+	
+	protected void RemoveUser(Socket socket){
+		synchronized(online){
+			online.remove(socket);
+		}
+	}
+	
+	protected void Message(String username, String message){
+		Socket client = online.get(username);
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
+			writer.write("(" + username + "): " + message);
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-//doesn't compile with javac on cs computers...
-///ChatServer.java:27: undefined reference to `ChatThread::ChatThread(java::net::Socket*)'
+	}	
+}
 
